@@ -33,7 +33,7 @@ def _store_prices(stock):
 
 
 def _get_formatted_data(path):
-    #path='stock-market/AAPL'
+
     minio = BaseHook.get_connection('minio')
     client = Minio(endpoint=minio.extra_dejson['endpoint_url'].split('//')[1],
                    access_key=minio.login,

@@ -17,3 +17,11 @@ AWS Secret Access Key: minio123
 extra: {
     "endpoint_url": "http://host.docker.internal:9000"
 }
+
+------------
+conn id: postgres
+conn type: Postgres
+Host: postgres
+Login: postgres
+password: postgres
+port: 5432

@@ -62,9 +62,10 @@ This project demonstrates a data pipeline for orchestrating the ETL (Extract, Tr
 ---
 
 ### Running the Pipeline
-1. Set up MinIO and PostgreSQL instances.
-2. Connect Apache Spark with MinIO for data processing.
-3. Configure Airflow to orchestrate DAG runs and trigger the Slack notifications.
-4. Use Metabase to visualize and interact with the data stored in PostgreSQL.
+1. Set up the Apache Airflow using the connection_details.txt
+2. Set up MinIO and PostgreSQL instances.
+3. Connect Apache Spark with MinIO for data processing.
+4. Configure Airflow to orchestrate DAG runs and trigger the Slack notifications.
+5. Use Metabase to visualize and interact with the data stored in PostgreSQL.
 
 ---

@@ -3,6 +3,10 @@ from airflow.sensors.base import PokeReturnValue
 from airflow.hooks.base import BaseHook
 from airflow.operators.python import PythonOperator
 from airflow.providers.docker.operators.docker import DockerOperator
+from airflow.providers.slack.notifications.slack_notifier import SlackNotifier
+from astro import sql
+from astro.files import File
+from astro.sql.table import Table, Metadata
 from include.stock_market.tasks import _extract_stock_prices, _store_prices, _get_formatted_data
 from datetime import datetime
 import requests
@@ -46,6 +50,16 @@ def stock_market():
                                        python_callable= _get_formatted_data,
                                        op_kwargs={'path': "{{ task_instance.xcom_pull(task_ids='store_prices') }}"})
 
-    verify_api() >> extract_stock_prices >> store_prices >> format_prices >> get_formatted_data
+    persist_to_DB = sql.load_file(task_id='persist_to_DB',
+                                  input_file=File(path=f"s3://{bucket_name}/{{{{ task_instance.xcom_pull(task_ids='get_formatted_data') }}}}", conn_id='minio'),
+                                  output_table=Table(name='stock_market',
+                                                     conn_id='postgres',
+                                                     metadata=Metadata(schema='public')),
+
+                                  load_options={"aws_access_key_id": BaseHook.get_connection('minio').login,
+                                                "aws_secret_access_key": BaseHook.get_connection('minio').password,
+                                                "endpoint_url": BaseHook.get_connection('minio').host})
+
+    verify_api() >> extract_stock_prices >> store_prices >> format_prices >> get_formatted_data >> persist_to_DB
 
 stock_market()
