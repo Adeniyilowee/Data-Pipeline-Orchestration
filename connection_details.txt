@@ -15,5 +15,5 @@ conn type: Amazon Web Services
 AWS Access Key ID: minio
 AWS Secret Access Key: minio123
 extra: {
-    "endpoint _url": "http://host.docker.intbrnal:9000"
+    "endpoint_url": "http://host.docker.internal:9000"
 }
