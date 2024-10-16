@@ -26,6 +26,7 @@ This project demonstrates a data pipeline for orchestrating the ETL (Extract, Tr
 
 ### Requirements
 - **Apache Spark**
+- **Docker**
 - **MinIO**
 - **PostgreSQL**
 - **Metabase**

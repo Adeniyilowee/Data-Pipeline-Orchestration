@@ -1,0 +1,19 @@
+conn id: stock_api
+conn type: HTTP
+Host: https://query1.finance.yahoo.com/
+Extra:
+{
+    "endpoint": "/v8/finance/chart/",
+    "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0"
+    }
+}
+------------
+conn id: minio
+conn type: Amazon Web Services
+AWS Access Key ID: minio
+AWS Secret Access Key: minio123
+extra: {
+    "endpoint _url": "http://host.docker.intbrnal:9000"
+}
