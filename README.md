@@ -2,6 +2,26 @@
 
 ## Overview
 This project demonstrates a data pipeline for orchestrating the ETL (Extract, Transform, Load) process using public finance data, Apache Spark, MinIO, PostgreSQL, Metabase, and Slack notifications.
+### Set up
+- Clone this repository by using this line of code:
+
+        git clone https://github.com/Adeniyilowee/Data-Pipeline-Orchestration
+
+- Open a terminal and change directory to the git cloned repository path:
+
+        cd Data-Pipeline-Orchestration
+
+- Intiate with the use of Astro:
+
+        Astro dev start
+
+- To trigger external container (Spark):
+
+        cd spark/notebooks/stock-transform
+
+- Build the container:
+
+        docker build . -t airflow/stock-app
 
 ### Steps Involved:
 1. **Extract Data**:
