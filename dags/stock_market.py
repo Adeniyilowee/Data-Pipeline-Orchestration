@@ -15,7 +15,13 @@ bucket_name = 'stock-market'
 
 @dag(start_date=datetime(2024, 1, 1),
      schedule='@daily', catchup=False,
-     tags=['stock_market'])
+     tags=['stock_market'],
+     on_success_callback=SlackNotifier(slack_conn_id='slack',
+                                       text='The DAG stock_market has succeded',
+                                       channel='general'),
+     on_failure_callback=SlackNotifier(slack_conn_id='slack',
+                                       text='The DAG stock_market has failed',
+                                       channel='general'))
 def stock_market():
 
     @task.sensor(poke_interval=30, timeout=300, mode='poke')
