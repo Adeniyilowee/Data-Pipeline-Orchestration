@@ -3,6 +3,7 @@ import requests
 import json
 from minio import Minio
 from io import BytesIO
+from airflow.exceptions import AirflowNotFoundException
 
 def _extract_stock_prices(url, symbol):
     url = f"{url}{symbol}?metrics=high?&interval=1d&range=1y"
@@ -29,3 +30,19 @@ def _store_prices(stock):
                              length=len(data))
 
     return f'{objw.bucket_name}/{symbol}'
+
+
+def _get_formatted_data(path):
+    #path='stock-market/AAPL'
+    minio = BaseHook.get_connection('minio')
+    client = Minio(endpoint=minio.extra_dejson['endpoint_url'].split('//')[1],
+                   access_key=minio.login,
+                   secret_key=minio.password,
+                   secure=False)
+    bucket_name = 'stock-market'
+    prefix_name = f"{path.split('/')[1]}/formatted_prices/"
+    objects = client.list_objects(bucket_name, prefix=prefix_name, recursive=True)
+    for obj in objects:
+        if obj.object_name.endswith('.csv'):
+            return obj.object_name
+    raise AirflowNotFoundException('The csv file does not exist')

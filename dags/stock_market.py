@@ -3,7 +3,7 @@ from airflow.sensors.base import PokeReturnValue
 from airflow.hooks.base import BaseHook
 from airflow.operators.python import PythonOperator
 from airflow.providers.docker.operators.docker import DockerOperator
-from include.stock_market.tasks import _extract_stock_prices, _store_prices
+from include.stock_market.tasks import _extract_stock_prices, _store_prices, _get_formatted_data
 from datetime import datetime
 import requests
 SYMBOL = 'AAPL'
@@ -42,6 +42,10 @@ def stock_market():
                                    mount_tmp_dir=False,
                                    environment={'SPARK_APPLICATION_ARGS': '{{ task_instance.xcom_pull(task_ids="store_prices") }}'})
 
-    verify_api() >> extract_stock_prices >> store_prices >> format_prices
+    get_formatted_data = PythonOperator(task_id='get_formatted_data',
+                                       python_callable= _get_formatted_data,
+                                       op_kwargs={'path': "{{ task_instance.xcom_pull(task_ids='store_prices') }}"})
+
+    verify_api() >> extract_stock_prices >> store_prices >> format_prices >> get_formatted_data
 
 stock_market()
